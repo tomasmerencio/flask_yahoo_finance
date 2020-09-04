@@ -13,17 +13,7 @@ def get_name(ticker):
             return i['nombre']
 
 
-@app.route('/api/live-price', methods=['GET'])
-@cross_origin(headers=["Access-Control-Allow-Origin", "*"])
-def getLivePrice():
-    ticker = request.args.get('ticker')
-    # date params format: YYYY/MM/DD
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
-
-    data_pandas = get_data(ticker, start_date = start_date, end_date= end_date,
-                            index_as_date= False)
-
+def data_pandas_to_arrays(data_pandas):
     del data_pandas['ticker']
 
     data_json = data_pandas.to_json(orient='records')
@@ -45,6 +35,21 @@ def getLivePrice():
 
         data_array.append(item)
     
+    return data_array
+
+
+@app.route('/api/live-price', methods=['GET'])
+@cross_origin(headers=["Access-Control-Allow-Origin", "*"])
+def getLivePrice():
+    ticker = request.args.get('ticker')
+    # date params format: YYYY/MM/DD
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    data_pandas = get_data(ticker, start_date = start_date, end_date= end_date,
+                            index_as_date= False)
+
+    data_array = data_pandas_to_arrays(data_pandas)
 
     return_json = {}
     return_json['ticker'] = ticker
