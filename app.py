@@ -22,7 +22,7 @@ def data_pandas_to_arrays(data_pandas):
     data_array = []
 
     for data in data_dict:
-        data["date"] = int(data["date"]/1000000)
+        data["date"] = int(data["date"])
         
         # item = [Timestamp, O, H, L, C]
         item = []
