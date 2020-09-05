@@ -23,6 +23,10 @@ def data_pandas_to_arrays(data_pandas):
 
     for data in data_dict:
         data["date"] = int(data["date"])
+        data["open"] = round(data["open"], 2)
+        data["high"] = round(data["high"], 2)
+        data["low"] = round(data["low"], 2)
+        data["close"] = round(data["close"], 2)
         
         # item = [Timestamp, O, H, L, C]
         item = []
