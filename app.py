@@ -40,7 +40,7 @@ def data_pandas_to_arrays(data_pandas):
 
 @app.route('/api/live-price', methods=['GET'])
 @cross_origin(headers=["Access-Control-Allow-Origin", "*"])
-def getLivePrice():
+def get_prices():
     ticker = request.args.get('ticker')
     # date params format: YYYY/MM/DD
     start_date = request.args.get('start_date')
@@ -49,6 +49,26 @@ def getLivePrice():
     data_pandas = get_data(ticker, start_date = start_date, end_date= end_date,
                             index_as_date= False)
 
+    data_array = data_pandas_to_arrays(data_pandas)
+
+    return_json = {}
+    return_json['ticker'] = ticker
+    return_json['name'] = get_name(ticker)
+    return_json['data'] = data_array
+
+    return jsonify(return_json)
+
+
+@app.route('/api/year-today-price', methods=['GET'])
+@cross_origin(headers=["Access-Control-Allow-Origin", "*"])
+def get_year_today_prices():
+    ticker = request.args.get('ticker')
+    # date params format: YYYY/MM/DD
+    start_date = date.today() - timedelta(days=365)
+    start_date = start_date.strftime("%Y/%m/%d")
+
+    data_pandas = get_data(ticker, start_date = start_date, index_as_date= False)
+ 
     data_array = data_pandas_to_arrays(data_pandas)
 
     return_json = {}
