@@ -42,29 +42,30 @@ def data_pandas_to_arrays(data_pandas):
     return data_array
 
 
+def get_live_price_all():
+    assets = cedears.lista
+    for i in assets:
+        i["live-price"] = get_live_price(i["ticker"])
+        print(f"ticker: {i['ticker']}, live-price: {i['live-price']}")
+    
+    return assets
+
+
 @app.route('/api/live-price', methods=['GET'])
-@cross_origin(headers=["Access-Control-Allow-Origin", "*"])
 def get_prices():
     ticker = request.args.get('ticker')
-    # date params format: YYYY/MM/DD
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
 
-    data_pandas = get_data(ticker, start_date = start_date, end_date= end_date,
-                            index_as_date= False)
-
-    data_array = data_pandas_to_arrays(data_pandas)
+    live_price = get_live_price(ticker)
 
     return_json = {}
     return_json['ticker'] = ticker
     return_json['name'] = get_name(ticker)
-    return_json['data'] = data_array
+    return_json['live-price'] = live_price
 
     return jsonify(return_json)
 
 
 @app.route('/api/year-today-price', methods=['GET'])
-@cross_origin(headers=["Access-Control-Allow-Origin", "*"])
 def get_year_today_prices():
     ticker = request.args.get('ticker')
     # date params format: YYYY/MM/DD
@@ -81,6 +82,23 @@ def get_year_today_prices():
     return_json['data'] = data_array
 
     return jsonify(return_json)
+
+
+@app.route('/api/live-price/all', methods=['GET'])
+def get_all_assets_prices():
+
+    return_json = get_live_price_all()
+
+    return jsonify(return_json)
+
+
+@app.after_request
+def after_request(response):
+    header = response.headers
+    header['Access-Control-Allow-Origin'] = '*'
+    header['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    header['Access-Control-Allow-Methods'] = 'GET'
+    return response
 
 
 if __name__ == '__main__':
