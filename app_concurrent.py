@@ -23,16 +23,16 @@ def get_name(ticker):
 async def fetch(ticker, session, data):
     url = f"https://finance.yahoo.com/quote/{ticker}?p={ticker}&.tsrc=fin-srch"
     
-    fetch.start_time[url] = default_timer()
+    # fetch.start_time[url] = default_timer()
     
     span_class = "Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)"
     
     async with session.get(url) as response:
         r = await response.read()
         
-        elapsed = default_timer() - fetch.start_time[url]
+        # elapsed = default_timer() - fetch.start_time[url]
         
-        print(f"{url}   took {elapsed}")
+        # print(f"{url}   took {elapsed}")
         
         r = BeautifulSoup(r, "html.parser")
         
@@ -61,7 +61,7 @@ async def fetch_all(tickers, data):
 
 
 def get_live_price_all_concurrent():
-    start_time = default_timer()
+    # start_time = default_timer()
     
     tickers = []
     
@@ -78,9 +78,9 @@ def get_live_price_all_concurrent():
     
     loop.run_until_complete(future) 
 
-    tot_elapsed = default_timer() - start_time
+    # tot_elapsed = default_timer() - start_time
     
-    print(f"Total time taken: {tot_elapsed}")
+    # print(f"Total time taken: {tot_elapsed}")
 
     return data
 
@@ -90,7 +90,7 @@ def get_all_assets_prices():
 
     return_json = get_live_price_all_concurrent()
 
-    print(return_json)
+    # print(return_json)
 
     return jsonify(return_json)
 
