@@ -43,7 +43,7 @@ def data_pandas_to_arrays(data_pandas):
 
 
 @app.route('/api/live-price', methods=['GET'])
-def get_live_price():
+def get_price():
     ticker = request.args.get('ticker')
 
     live_price = get_live_price(ticker)

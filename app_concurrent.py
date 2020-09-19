@@ -44,6 +44,7 @@ async def fetch(ticker, session, data):
         row['cotizacion'] = cotizacion
         
         data.append(row)
+        print(row)
         
         return r
 
