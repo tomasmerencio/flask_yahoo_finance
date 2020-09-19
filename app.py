@@ -43,7 +43,7 @@ def data_pandas_to_arrays(data_pandas):
 
 
 @app.route('/api/live-price', methods=['GET'])
-def get_prices():
+def get_live_price():
     ticker = request.args.get('ticker')
 
     live_price = get_live_price(ticker)
@@ -53,6 +53,30 @@ def get_prices():
     return_json['name'] = get_name(ticker)
     return_json['live-price'] = live_price
 
+    return jsonify(return_json)
+
+
+@app.route('/api/price-between', methods=['GET'])
+def get_prices():
+    ticker = request.args.get('ticker')
+    # date params format: YYYY/MM/DD
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    data_pandas = get_data(ticker, start_date = start_date, end_date= end_date,
+                index_as_date= False)
+
+    del data_pandas['ticker']
+
+    data_json = data_pandas.to_json(orient='records')
+    data_dict = json.loads(data_json)
+
+    for data in data_dict:
+        data["date"] = datetime.utcfromtimestamp(data["date"]/1000).strftime('%Y/%m/%d')
+
+    return_json = []
+    return_json.append({'ticker': ticker, 'name': get_name(ticker)})
+    return_json.append({'values': data_dict})
     return jsonify(return_json)
 
 
