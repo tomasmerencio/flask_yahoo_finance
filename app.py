@@ -42,15 +42,6 @@ def data_pandas_to_arrays(data_pandas):
     return data_array
 
 
-def get_live_price_all():
-    assets = cedears.lista
-    for i in assets:
-        i["live-price"] = get_live_price(i["ticker"])
-        print(f"ticker: {i['ticker']}, live-price: {i['live-price']}")
-    
-    return assets
-
-
 @app.route('/api/live-price', methods=['GET'])
 def get_prices():
     ticker = request.args.get('ticker')
@@ -80,14 +71,6 @@ def get_year_today_prices():
     return_json['ticker'] = ticker
     return_json['name'] = get_name(ticker)
     return_json['data'] = data_array
-
-    return jsonify(return_json)
-
-
-@app.route('/api/live-price/all', methods=['GET'])
-def get_all_assets_prices():
-
-    return_json = get_live_price_all()
 
     return jsonify(return_json)
 
