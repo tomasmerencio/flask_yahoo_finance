@@ -66,17 +66,13 @@ def get_prices():
     data_pandas = get_data(ticker, start_date = start_date, end_date= end_date,
                 index_as_date= False)
 
-    del data_pandas['ticker']
+    data_array = data_pandas_to_arrays(data_pandas)
 
-    data_json = data_pandas.to_json(orient='records')
-    data_dict = json.loads(data_json)
+    return_json = {}
+    return_json['ticker'] = ticker
+    return_json['name'] = get_name(ticker)
+    return_json['data'] = data_array
 
-    for data in data_dict:
-        data["date"] = datetime.utcfromtimestamp(data["date"]/1000).strftime('%Y/%m/%d')
-
-    return_json = []
-    return_json.append({'ticker': ticker, 'name': get_name(ticker)})
-    return_json.append({'values': data_dict})
     return jsonify(return_json)
 
 
