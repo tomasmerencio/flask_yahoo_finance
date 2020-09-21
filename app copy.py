@@ -30,14 +30,12 @@ def data_pandas_to_arrays(data_pandas):
         
         # item = [Timestamp, O, H, L, C]
         item = []
-        ohlc_item = []
         
         item.append(data["date"])
-        ohlc_item.append(data["open"])
-        ohlc_item.append(data["high"])
-        ohlc_item.append(data["low"])
-        ohlc_item.append(data["close"])
-        item.append(ohlc_item)
+        item.append(data["open"])
+        item.append(data["high"])
+        item.append(data["low"])
+        item.append(data["close"])
 
         data_array.append(item)
     
